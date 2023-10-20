@@ -4,5 +4,11 @@
         "dueDate": "2023/10/20",
         "genre": "Fantasy",
         "name": "ercy Jackson"
+    },
+    {
+        "author": "Jack Sparrow",
+        "dueDate": "2023-10-21",
+        "genre": "Tragedy",
+        "name": "The Great Gatsby"
     }
 ]

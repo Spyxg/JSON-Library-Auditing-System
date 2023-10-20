@@ -297,7 +297,6 @@ void ViewDatabase(const LibraryDatabase& library, const std::string& title) {
         std::cout << "Name: " << book.name << "\n";
         std::cout << "Genre: " << book.genre << "\n";
         std::cout << "Author: " << book.author << "\n";
-        std::cout << "Due Date: " << book.dueDate << "\n";
         std::cout << "-------------------\n";
     }
     std::cout << "\nPress any key to go back to the main menu...";
@@ -322,7 +321,9 @@ int main() {
     // Main menu loop (you can create a more user-friendly interface).
     while (true) {
         CheckAndMoveOverdueBooks(outsideLibrary, overdue); //every time the main function runs, checkandmoveoverduebooks will now be called if the due dates of the books out of the library have passed.
+
         int choice;
+
         std::cout << "Library Management Menu:\n";
         std::cout << "1. Add a book to the library\n";
         std::cout << "2. Remove a book from the library database\n";
@@ -334,8 +335,6 @@ int main() {
         std::cout << "8. Exit\n";
         std::cout << "Enter your choice: ";
         std::cin >> choice;
-
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
         case 1: {
@@ -379,11 +378,33 @@ int main() {
             std::cout << "Enter due date (YYYY-MM-DD): ";
             std::cin >> newBook.dueDate;
 
-            AddBookToOutsideLibrary(outsideLibrary, newBook);
-            std::cout << "Book added to the outside library." << std::endl;
-            SaveOutsideLibraryData(outsideLibrary, "outside_library_data.json");
+            bool bookFound = false;
+            auto it = library.books.begin();
+
+            while (it != library.books.end()) {
+                if (it->name == newBook.name) {
+                    // Move the book from the library to the outside library.
+                    AddBookToOutsideLibrary(outsideLibrary, newBook); // Add 'newBook' to outsideLibrary
+                    it = library.books.erase(it);
+                    bookFound = true;
+                    std::cout << "Book added to the outside library." << std::endl;
+                    break; // Stop searching once the book is found.
+                }
+                else {
+                    ++it;
+                }
+            }
+
+            if (!bookFound) {
+                std::cout << "Book not found in the library." << std::endl;
+            }
+            else {
+                SaveLibraryData(library, "library_data.json");
+                SaveOutsideLibraryData(outsideLibrary, "outside_library_data.json");
+            }
+
             break;
-        }
+        }       
         case 4: {
             std::string currentDate = GetCurrentDate();
             MoveOverdueBooks(outsideLibrary, overdue, currentDate);
