@@ -1,1 +1,12 @@
-null
+[
+    {
+        "dueDate": "",
+        "genre": "Fantasy",
+        "name": "ercy Jackson"
+    },
+    {
+        "dueDate": "",
+        "genre": "Young Adult Fiction",
+        "name": "iary of a Wimpy Kid"
+    }
+]

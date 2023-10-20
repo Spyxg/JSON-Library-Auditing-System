@@ -5,6 +5,8 @@
 #include "json.hpp"
 #include <ctime>
 #include <limits>
+#include <cstdlib> 
+#include <conio.h>
 
 using json = nlohmann::json; // Alias for the JSON library.
 
@@ -281,6 +283,26 @@ void ViewOverdueDatabase(const OverdueDatabase& overdue) {
     }
 }
 
+void WaitForKeyPress() {
+
+    std::cout << std::endl;
+    std::cout << "Press any key to continue...";
+    _getch(); 
+}
+
+void ViewDatabase(const LibraryDatabase& library, const std::string& title) {
+    system("cls");  
+    std::cout << title << ":\n";
+    for (const auto& book : library.books) {
+        std::cout << "Name: " << book.name << "\n";
+        std::cout << "Genre: " << book.genre << "\n";
+        std::cout << "Author: " << book.author << "\n";
+        std::cout << "Due Date: " << book.dueDate << "\n";
+        std::cout << "-------------------\n";
+    }
+    std::cout << "\nPress any key to go back to the main menu...";
+}
+
 void CheckAndMoveOverdueBooks(OutsideLibraryDatabase& outsideLibrary, OverdueDatabase& overdue) {
     std::string currentDate = GetCurrentDate();
     MoveOverdueBooks(outsideLibrary, overdue, currentDate);
@@ -303,8 +325,8 @@ int main() {
         int choice;
         std::cout << "Library Management Menu:\n";
         std::cout << "1. Add a book to the library\n";
-        std::cout << "2. Remove a book from the library\n";
-        std::cout << "3. Add a book to the outside library\n";
+        std::cout << "2. Remove a book from the library database\n";
+        std::cout << "3. Check a book out of the library\n";
         std::cout << "4. Move overdue books from outside library\n";
         std::cout << "5. View Library Database\n";
         std::cout << "6. View Outside Library Database\n";
@@ -317,6 +339,7 @@ int main() {
 
         switch (choice) {
         case 1: {
+            system("cls");
             Book newBook;
             std::cout << "Enter book name: ";
             std::cin.ignore();
@@ -328,18 +351,23 @@ int main() {
 
             AddBookToLibrary(library, newBook);
             std::cout << "Book added to the library." << std::endl;
+            SaveLibraryData(library, "library_data.json");
+            system("cls");
             break;
         }
         case 2: {
+            system("cls");
             std::string bookName;
             std::cout << "Enter the name of the book to remove from the library: ";
             std::cin.ignore();
             std::getline(std::cin, bookName);
             RemoveBookFromLibrary(library, bookName);
             std::cout << "Book removed from the library." << std::endl;
+            SaveLibraryData(library, "library_data.json");
             break;
         }
         case 3: {
+            system("cls");
             Book newBook;
             std::cout << "Enter book name: ";
             std::cin.ignore();
@@ -353,24 +381,36 @@ int main() {
 
             AddBookToOutsideLibrary(outsideLibrary, newBook);
             std::cout << "Book added to the outside library." << std::endl;
+            SaveOutsideLibraryData(outsideLibrary, "outside_library_data.json");
             break;
         }
         case 4: {
             std::string currentDate = GetCurrentDate();
             MoveOverdueBooks(outsideLibrary, overdue, currentDate);
             std::cout << "Overdue books moved from the outside library." << std::endl;
+            SaveOutsideLibraryData(outsideLibrary, "outside_library_data.json");
+            SaveOverdueData(overdue, "overdue_data.json");
             break;
         }
         case 5: {
+            system("cls");
             ViewLibraryDatabase(library);
+            WaitForKeyPress();
+            system("cls");
             break;
         }
         case 6: {
+            system("cls");
             ViewOutsideLibraryDatabase(outsideLibrary);
+            WaitForKeyPress();
+            system("cls");
             break;
         }
         case 7: {
+            system("cls");
             ViewOverdueDatabase(overdue);
+            WaitForKeyPress();
+            system("cls");
             break;
         }
         case 8:

@@ -1,1 +1,8 @@
-null
+[
+    {
+        "author": "Jack Daniels",
+        "dueDate": "2023/10/20",
+        "genre": "Fantasy",
+        "name": "ercy Jackson"
+    }
+]
