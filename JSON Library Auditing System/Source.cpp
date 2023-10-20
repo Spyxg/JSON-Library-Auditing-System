@@ -281,6 +281,11 @@ void ViewOverdueDatabase(const OverdueDatabase& overdue) {
     }
 }
 
+void CheckAndMoveOverdueBooks(OutsideLibraryDatabase& outsideLibrary, OverdueDatabase& overdue) {
+    std::string currentDate = GetCurrentDate();
+    MoveOverdueBooks(outsideLibrary, overdue, currentDate);
+}
+
 int main() {
     // Initialize library, outside-library, and overdue databases.
     LibraryDatabase library;
@@ -294,6 +299,7 @@ int main() {
 
     // Main menu loop (you can create a more user-friendly interface).
     while (true) {
+        CheckAndMoveOverdueBooks(outsideLibrary, overdue); //every time the main function runs, checkandmoveoverduebooks will now be called if the due dates of the books out of the library have passed.
         int choice;
         std::cout << "Library Management Menu:\n";
         std::cout << "1. Add a book to the library\n";
@@ -311,19 +317,48 @@ int main() {
 
         switch (choice) {
         case 1: {
-            // ... (unchanged)
+            Book newBook;
+            std::cout << "Enter book name: ";
+            std::cin.ignore();
+            std::getline(std::cin, newBook.name);
+            std::cout << "Enter book genre: ";
+            std::getline(std::cin, newBook.genre);
+            std::cout << "Enter the authors name: ";
+            std::getline(std::cin, newBook.author);
+
+            AddBookToLibrary(library, newBook);
+            std::cout << "Book added to the library." << std::endl;
             break;
         }
         case 2: {
-            // ... (unchanged)
+            std::string bookName;
+            std::cout << "Enter the name of the book to remove from the library: ";
+            std::cin.ignore();
+            std::getline(std::cin, bookName);
+            RemoveBookFromLibrary(library, bookName);
+            std::cout << "Book removed from the library." << std::endl;
             break;
         }
         case 3: {
-            // ... (unchanged)
+            Book newBook;
+            std::cout << "Enter book name: ";
+            std::cin.ignore();
+            std::getline(std::cin, newBook.name);
+            std::cout << "Enter book genre: ";
+            std::getline(std::cin, newBook.genre);
+            std::cout << "Enter the name of the person taking the book: ";
+            std::getline(std::cin, newBook.author);
+            std::cout << "Enter due date (YYYY-MM-DD): ";
+            std::cin >> newBook.dueDate;
+
+            AddBookToOutsideLibrary(outsideLibrary, newBook);
+            std::cout << "Book added to the outside library." << std::endl;
             break;
         }
         case 4: {
-            // ... (unchanged)
+            std::string currentDate = GetCurrentDate();
+            MoveOverdueBooks(outsideLibrary, overdue, currentDate);
+            std::cout << "Overdue books moved from the outside library." << std::endl;
             break;
         }
         case 5: {
